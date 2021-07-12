@@ -3,24 +3,19 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-  mode: 'development',  // development | production
   entry: './src/index.tsx',
   output: {
     filename: 'main.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.join(process.cwd(), 'dist'),
     clean: true,
-  },
-  devtool: 'inline-source-map',  // for debugging errors
-  devServer: {
-    contentBase: './dist' // path to bundle
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Project', // title of document
-      template: path.join(__dirname, 'src', 'index.html')
+      title: 'Project',
+      template: path.join(process.cwd(), 'src', 'index.html')
     }),
     new MiniCssExtractPlugin()
   ],
@@ -36,14 +31,31 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-react', '@babel/preset-typescript']
-          }
         },
       },
       {
-        test: /\.css$/i,
-        use: [MiniCssExtractPlugin.loader, 'css-loader']
+        test: /\.(css|scss)$/i,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                compileType: "module",
+                mode: "local",
+                auto: true,
+                exportGlobals: true,
+                localIdentName: "[folder]-[local]__[hash:base64:5]",
+                localIdentContext: path.resolve(__dirname, "src"),
+                localIdentHashPrefix: "my-custom-hash",
+                namedExport: false,
+                exportLocalsConvention: "camelCaseOnly",
+              },
+             
+            }
+          },
+          'sass-loader'
+        ]
       },
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
@@ -55,4 +67,4 @@ module.exports = {
       }
     ]
   }
-};
+}
