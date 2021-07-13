@@ -15,7 +15,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Project',
-      template: path.join(process.cwd(), 'src', 'index.html')
+      template: path.join(__dirname, 'src', 'index.html')
     }),
     new MiniCssExtractPlugin()
   ],
@@ -45,7 +45,7 @@ module.exports = {
                 mode: "local",
                 auto: true,
                 exportGlobals: true,
-                localIdentName: "[folder]-[local]__[hash:base64:5]",
+                localIdentName: "[folder]_[local]__[hash:base64:5]",
                 localIdentContext: path.resolve(__dirname, "src"),
                 localIdentHashPrefix: "my-custom-hash",
                 namedExport: false,
